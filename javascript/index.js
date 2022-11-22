@@ -202,6 +202,7 @@ function paintDom(eventos) {
                                 <p>Price: ${data.eventos[i].price}</p>
                                 <a href="./pages/details.html" target="_blank" class="btn btn-primary view">View
                                     more...</a>
+                                    <p class="card-category hidden">Categoria: ${data.eventos[i].category}</p>
                             </div>
                         </div>
                     </div>
@@ -228,8 +229,8 @@ function paintCategories(categories) {
 
   for (let i = 0; i < uniqueCategories.length; i++) {
     div += `
-    <label for="category"><input class="form-check-input" type="checkbox" 
-    id="categories" name="position" value="forward">${uniqueCategories[i]}</label>
+    <label for="${uniqueCategories[i]}"><input class="form-check-input" type="checkbox" 
+    id="${uniqueCategories[i]}" name="position" value="${uniqueCategories[i]}">${uniqueCategories[i]}</label>
     `
   }
   tagToUpdate.innerHTML = div
@@ -237,15 +238,49 @@ function paintCategories(categories) {
 
 paintCategories(uniqueCategories)
 
-// Filtrando eventos por search input
+// Filtrando paintDom por buscador
 
-// const searchInput = document.getElementById("searchInput")
-// const searchButton = document.getElementById("searchButton")
+const inputSearch = document.getElementById("searchInput")
+console.log("inputSearch", inputSearch)
 
-// searchButton.addEventListener("click", () => {
-//   const searchValue = searchInput.value
-//   const filteredEvents = data.eventos.filter((event) => {
-//     return event.name.toLowerCase().includes(searchValue.toLowerCase())
-//   })
-//   paintDom(filteredEvents)
-// })
+const eventCards = document.querySelectorAll(".col")
+
+inputSearch.addEventListener("keyup", (e) => {
+  const searchValue = e.target.value.toLowerCase()
+
+  eventCards.forEach((card) => {
+    const cardTitle = card
+      .querySelector(".card-title")
+      .textContent.toLowerCase()
+    const cardText = card.querySelector(".card-text").textContent.toLowerCase()
+    cardTitle.includes(searchValue)
+      ? card.classList.remove("hidden")
+      : card.classList.add("hidden") || cardText.includes(searchValue)
+      ? card.classList.remove("hidden")
+      : card.classList.add("hidden")
+  })
+})
+
+// Filtrando paintDom por checkboxs
+
+const inputCheckbox = document.getElementById("categories")
+console.log("inputCheckbox", inputCheckbox)
+
+inputCheckbox.addEventListener("change", (e) => {
+  const searchValue = e.target.value.toLowerCase()
+  const checked = e.target.checked
+
+  eventCards.forEach((card) => {
+    console.log("card", card)
+    const cardCategory = card
+      .querySelector(".card-category")
+      .textContent.toLowerCase()
+    if (cardCategory.includes(searchValue) && checked) {
+      card.classList.remove("hidden")
+    } else if (!cardCategory.includes(searchValue) && checked) {
+      card.classList.add("hidden")
+    }
+  })
+})
+
+// Filtrando paintDom por buscador y checkboxs simultaneamente
