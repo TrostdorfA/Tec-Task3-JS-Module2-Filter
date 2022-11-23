@@ -249,6 +249,7 @@ inputSearch.addEventListener("keyup", (e) => {
   const searchValue = e.target.value.toLowerCase()
 
   eventCards.forEach((card) => {
+    console.log("card", card)
     const cardTitle = card
       .querySelector(".card-title")
       .textContent.toLowerCase()
@@ -267,20 +268,28 @@ const inputCheckbox = document.getElementById("categories")
 console.log("inputCheckbox", inputCheckbox)
 
 inputCheckbox.addEventListener("change", (e) => {
-  const searchValue = e.target.value.toLowerCase()
-  const checked = e.target.checked
+  let checkedCategories = []
 
-  eventCards.forEach((card) => {
-    console.log("card", card)
-    const cardCategory = card
-      .querySelector(".card-category")
-      .textContent.toLowerCase()
-    if (cardCategory.includes(searchValue) && checked) {
-      card.classList.remove("hidden")
-    } else if (!cardCategory.includes(searchValue) && checked) {
-      card.classList.add("hidden")
+  const checkedBoxes = document.querySelectorAll(".form-check-input")
+
+  checkedBoxes.forEach((box) => {
+    if (box.checked) {
+      checkedCategories.push(box.value)
     }
   })
-})
 
-// Filtrando paintDom por buscador y checkboxs simultaneamente
+  for (let i = 0; i < data.eventos.length; i++) {
+    if (checkedCategories.includes(data.eventos[i].category)) {
+      eventCards[i].classList.remove("hidden")
+    } else {
+      eventCards[i].classList.add("hidden")
+    }
+  }
+
+  if (checkedCategories.length === 0) {
+    for (let i = 0; i < data.eventos.length; i++) {
+      eventCards[i].classList.remove("hidden")
+    }
+  }
+  console.log("checkedCategories", checkedCategories)
+})
