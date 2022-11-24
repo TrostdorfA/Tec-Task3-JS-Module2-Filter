@@ -277,29 +277,47 @@ inputSearch.addEventListener("keyup", (e) => {
 const inputCheckbox = document.getElementById("categories")
 console.log("inputCheckbox", inputCheckbox)
 
+const elementsCategories = document.getElementsByClassName("card-category")
+
 inputCheckbox.addEventListener("change", (e) => {
-  let checkedCategories = []
+  const inputs = document.querySelectorAll("input[type=checkbox]:checked")
 
-  const checkedBoxes = document.querySelectorAll(".form-check-input")
+  const values = []
 
-  checkedBoxes.forEach((box) => {
-    if (box.checked) {
-      checkedCategories.push(box.value)
-    }
+  inputs.forEach((input) => {
+    values.push(input.value)
   })
 
-  for (let i = 0; i < data.eventos.length; i++) {
-    if (checkedCategories.includes(data.eventos[i].category)) {
-      eventCards[i].classList.remove("hidden")
+  for (let i = 0; i < elementsCategories.length; i++) {
+    const element = elementsCategories[i]
+    const elementCategory = element.textContent.split(": ")[1]
+
+    if (values.includes(elementCategory)) {
+      element.parentElement.parentElement.parentElement.parentElement.classList.remove(
+        "hidden"
+      )
     } else {
-      eventCards[i].classList.add("hidden")
+      element.parentElement.parentElement.parentElement.parentElement.classList.add(
+        "hidden"
+      )
     }
   }
 
-  if (checkedCategories.length === 0) {
-    for (let i = 0; i < data.eventos.length; i++) {
-      eventCards[i].classList.remove("hidden")
+  if (values.length === 0) {
+    for (let i = 0; i < elementsCategories.length; i++) {
+      const element = elementsCategories[i]
+      element.parentElement.parentElement.parentElement.parentElement.classList.remove(
+        "hidden"
+      )
     }
   }
-  console.log("checkedCategories", checkedCategories)
+  console.log("values", values)
+
+  const cards = document.querySelectorAll(".col:not(.hidden)").length
+
+  if (cards === 0) {
+    document.getElementById("errorP").classList.remove("hidden")
+  } else {
+    document.getElementById("errorP").classList.add("hidden")
+  }
 })

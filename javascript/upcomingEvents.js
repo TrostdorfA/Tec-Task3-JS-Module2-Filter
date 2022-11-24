@@ -240,66 +240,90 @@ function paintCategories(categories) {
 
 paintCategories(uniqueCategories)
 
-// Filtrando paintDom por buscador
+const searchFilterEvents = () => {
+  // Filtrando paintDom por buscador
 
-const inputSearch = document.getElementById("searchInput")
-console.log("inputSearch", inputSearch)
+  const inputSearch = document.getElementById("searchInput")
+  console.log("inputSearch", inputSearch)
 
-const eventCards = document.querySelectorAll(".col")
+  const eventCards = document.querySelectorAll(".col")
 
-inputSearch.addEventListener("keyup", (e) => {
-  const searchValue = e.target.value.toLowerCase()
+  inputSearch.addEventListener("keyup", (e) => {
+    const searchValue = e.target.value.toLowerCase()
 
-  eventCards.forEach((card) => {
-    console.log("card", card)
-    const cardTitle = card
-      .querySelector(".card-title")
-      .textContent.toLowerCase()
-    const cardText = card.querySelector(".card-text").textContent.toLowerCase()
-    cardTitle.includes(searchValue)
-      ? card.classList.remove("hidden")
-      : card.classList.add("hidden") || cardText.includes(searchValue)
-      ? card.classList.remove("hidden")
-      : card.classList.add("hidden")
-  })
+    eventCards.forEach((card) => {
+      console.log("card", card)
+      const cardTitle = card
+        .querySelector(".card-title")
+        .textContent.toLowerCase()
+      const cardText = card
+        .querySelector(".card-text")
+        .textContent.toLowerCase()
+      cardTitle.includes(searchValue)
+        ? card.classList.remove("hidden")
+        : card.classList.add("hidden") || cardText.includes(searchValue)
+        ? card.classList.remove("hidden")
+        : card.classList.add("hidden")
+    })
 
-  const cards = document.querySelectorAll(".col:not(.hidden)").length
+    const cards = document.querySelectorAll(".col:not(.hidden)").length
 
-  if (cards === 0) {
-    document.getElementById("errorP").classList.remove("hidden")
-  } else {
-    document.getElementById("errorP").classList.add("hidden")
-  }
-})
-
-// Filtrando paintDom por checkboxs
-
-const inputCheckbox = document.getElementById("categories")
-console.log("inputCheckbox", inputCheckbox)
-
-inputCheckbox.addEventListener("change", (e) => {
-  let checkedCategories = []
-
-  const checkedBoxes = document.querySelectorAll(".form-check-input")
-
-  checkedBoxes.forEach((box) => {
-    if (box.checked) {
-      checkedCategories.push(box.value)
-    }
-  })
-
-  for (let i = 0; i < data.eventos.length; i++) {
-    if (checkedCategories.includes(data.eventos[i].category)) {
-      eventCards[i].classList.remove("hidden")
+    if (cards === 0) {
+      document.getElementById("errorP").classList.remove("hidden")
     } else {
-      eventCards[i].classList.add("hidden")
+      document.getElementById("errorP").classList.add("hidden")
     }
-  }
+  })
 
-  if (checkedCategories.length === 0) {
-    for (let i = 0; i < data.eventos.length; i++) {
-      eventCards[i].classList.remove("hidden")
+  // Filtrando paintDom por checkboxs
+
+  const inputCheckbox = document.getElementById("categories")
+  console.log("inputCheckbox", inputCheckbox)
+
+  const elementsCategories = document.getElementsByClassName("card-category")
+
+  inputCheckbox.addEventListener("change", (e) => {
+    const inputs = document.querySelectorAll("input[type=checkbox]:checked")
+
+    const values = []
+
+    inputs.forEach((input) => {
+      values.push(input.value)
+    })
+
+    for (let i = 0; i < elementsCategories.length; i++) {
+      const element = elementsCategories[i]
+      const elementCategory = element.textContent.split(": ")[1]
+
+      if (values.includes(elementCategory)) {
+        element.parentElement.parentElement.parentElement.parentElement.classList.remove(
+          "hidden"
+        )
+      } else {
+        element.parentElement.parentElement.parentElement.parentElement.classList.add(
+          "hidden"
+        )
+      }
     }
-  }
-  console.log("checkedCategories", checkedCategories)
-})
+
+    if (values.length === 0) {
+      for (let i = 0; i < elementsCategories.length; i++) {
+        const element = elementsCategories[i]
+        element.parentElement.parentElement.parentElement.parentElement.classList.remove(
+          "hidden"
+        )
+      }
+    }
+    console.log("values", values)
+
+    const cards = document.querySelectorAll(".col:not(.hidden)").length
+
+    if (cards === 0) {
+      document.getElementById("errorP").classList.remove("hidden")
+    } else {
+      document.getElementById("errorP").classList.add("hidden")
+    }
+  })
+}
+
+searchFilterEvents()
