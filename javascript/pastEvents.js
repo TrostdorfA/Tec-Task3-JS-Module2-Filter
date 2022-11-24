@@ -192,21 +192,22 @@ function paintDom(eventos) {
     if (Date.parse(data.fechaActual) > Date.parse(data.eventos[i].date)) {
       section += `
         <div class="col">
-                        <div class="card h-100">
-                            <div class="card-img-container">
-                                <img src="${data.eventos[i].image}" class="card-img-top" alt="...">
-                            </div>
-                            <div class="card-body text-center">
-                                <h3 class="card-title">${data.eventos[i].name}</h3>
-                                <p class="card-text">${data.eventos[i].description}</p>
-                                <div class="d-flex justify-content-between">
-                                    <p>Price: ${data.eventos[i].price}</p>
-                                    <a href="../pages/details.html" target="_blank" class="btn btn-primary view">View
-                                        more...</a>
-                                </div>
+                    <div class="card h-100">
+                        <div class="card-img-container">
+                            <img src="${data.eventos[i].image}" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 class="card-title">${data.eventos[i].name}</h3>
+                            <p class="card-text">${data.eventos[i].description}</p>
+                            <div class="d-flex justify-content-between">
+                                <p>Price: ${data.eventos[i].price}</p>
+                                <a href="./pages/details.html" target="_blank" class="btn btn-primary view">View
+                                    more...</a>
+                                    <p class="card-category hidden">Categoria: ${data.eventos[i].category}</p>
                             </div>
                         </div>
                     </div>
+                </div>
         `
     }
   }
@@ -214,3 +215,91 @@ function paintDom(eventos) {
 }
 
 paintDom(events)
+
+// Creando checkboxs filtrando por categoria
+
+const categories = data.eventos.map((event) => {
+  return event.category
+})
+
+const uniqueCategories = [...new Set(categories)]
+
+function paintCategories(categories) {
+  let div = ``
+
+  const tagToUpdate = document.getElementById("categories")
+
+  for (let i = 0; i < uniqueCategories.length; i++) {
+    div += `
+    <label for="${uniqueCategories[i]}"><input class="form-check-input" type="checkbox" 
+    id="${uniqueCategories[i]}" name="position" value="${uniqueCategories[i]}">${uniqueCategories[i]}</label>
+    `
+  }
+  tagToUpdate.innerHTML = div
+}
+
+paintCategories(uniqueCategories)
+
+// Filtrando paintDom por buscador
+
+const inputSearch = document.getElementById("searchInput")
+console.log("inputSearch", inputSearch)
+
+const eventCards = document.querySelectorAll(".col")
+
+inputSearch.addEventListener("keyup", (e) => {
+  const searchValue = e.target.value.toLowerCase()
+
+  eventCards.forEach((card) => {
+    console.log("card", card)
+    const cardTitle = card
+      .querySelector(".card-title")
+      .textContent.toLowerCase()
+    const cardText = card.querySelector(".card-text").textContent.toLowerCase()
+    cardTitle.includes(searchValue)
+      ? card.classList.remove("hidden")
+      : card.classList.add("hidden") || cardText.includes(searchValue)
+      ? card.classList.remove("hidden")
+      : card.classList.add("hidden")
+  })
+
+  const cards = document.querySelectorAll(".col:not(.hidden)").length
+
+  if (cards === 0) {
+    document.getElementById("errorP").classList.remove("hidden")
+  } else {
+    document.getElementById("errorP").classList.add("hidden")
+  }
+})
+
+// Filtrando paintDom por checkboxs
+
+const inputCheckbox = document.getElementById("categories")
+console.log("inputCheckbox", inputCheckbox)
+
+inputCheckbox.addEventListener("change", (e) => {
+  let checkedCategories = []
+
+  const checkedBoxes = document.querySelectorAll(".form-check-input")
+
+  checkedBoxes.forEach((box) => {
+    if (box.checked) {
+      checkedCategories.push(box.value)
+    }
+  })
+
+  for (let i = 0; i < data.eventos.length; i++) {
+    if (checkedCategories.includes(data.eventos[i].category)) {
+      eventCards[i].classList.remove("hidden")
+    } else {
+      eventCards[i].classList.add("hidden")
+    }
+  }
+
+  if (checkedCategories.length === 0) {
+    for (let i = 0; i < data.eventos.length; i++) {
+      eventCards[i].classList.remove("hidden")
+    }
+  }
+  console.log("checkedCategories", checkedCategories)
+})

@@ -45,9 +45,9 @@
     <main>
         <div class="container">
             <div class="search-flex d-flex justify-content-between">
-                <div class="mt-1 label">
-                    <label for="category"><input class="form-check-input" type="checkbox" id="category" name="position"
-                            value="forward">Category</label>
+                <div id="categories" class="mt-1 label">
+                    <!-- <label for="category"><input class="form-check-input" type="checkbox" id="categories"
+                            name="position" value="forward">Category</label>
                     <label for="category1"><input class="form-check-input" type="checkbox" id="category1"
                             name="position" value="defense">Category</label>
                     <label for="category2"><input class="form-check-input" type="checkbox" id="category2"
@@ -55,18 +55,19 @@
                     <label for="category3"><input class="form-check-input" type="checkbox" id="category3"
                             name="position" value="defense">Category</label>
                     <label for="category4"><input class="form-check-input" type="checkbox" id="category4"
-                            name="position" value="defense">Category</label>
+                            name="position" value="defense">Category</label> -->
                 </div>
                 <div class="d-flex">
                     <div class="search input-group mb-3">
-                        <input type="text" size="50" class="search-input form-control" placeholder="search..."
-                            name="search">
-                        <a href="#" class="search-icon">
+                        <input id="searchInput" size="50" type="text" class="search-input form-control"
+                            placeholder="search..." name="search">
+                        <a id="searchButton" href="#" class="search-icon">
                             <i class="bi bi-search"></i>
                         </a>
                     </div>
                 </div>
             </div>
+            <p class="error hidden" id="errorP">No results found</p>
             <section id="root" class="mt-1 mb-3 row g-5">
             </section>
         </div>

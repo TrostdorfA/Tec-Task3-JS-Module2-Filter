@@ -260,6 +260,14 @@ inputSearch.addEventListener("keyup", (e) => {
       ? card.classList.remove("hidden")
       : card.classList.add("hidden")
   })
+
+  const cards = document.querySelectorAll(".col:not(.hidden)").length
+
+  if (cards === 0) {
+    document.getElementById("errorP").classList.remove("hidden")
+  } else {
+    document.getElementById("errorP").classList.add("hidden")
+  }
 })
 
 // Filtrando paintDom por checkboxs
